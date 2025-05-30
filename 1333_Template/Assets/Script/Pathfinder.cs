@@ -1,137 +1,160 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]                
+[ExecuteInEditMode]
 public class Pathfinder : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GridManager gridManager;    // Reference to the GridManager in the scene
-    [SerializeField] private Transform startTransform;   // World‐space marker for the path’s start
-    [SerializeField] private Transform targetTransform;  // World‐space marker for the path’s goal
+    [SerializeField] private GridManager gridManager; //Reference to the GridManager that probides node data.
+    [SerializeField] private Transform startTransform; 
+    [SerializeField] private Transform targetTransform;
 
-    private List<Vector3> pathPositions;                // Holds the resulting world‐space path
+    private List<Vector3> pathPositions; // List of world positions representing the found path.
+    private List<Vector3> frontierPositions = new(); // Positions of nodes to be explored.
+    private List<Vector3> visitedPositions = new(); // Pssitions of nodes already explored.
 
-    private void Awake()
+    public IReadOnlyList<Vector3> PathPositions => pathPositions; // Exposes the found path as a ready-only list.
+
+    // Initializes the references for the pathfinder
+    public void Init(GridManager gm, Transform start, Transform target)
     {
-        // When the game starts playing, automatically find a path once
-        if (Application.isPlaying)
+        gridManager = gm;
+        startTransform = start;
+        targetTransform = target;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) // When the "R" key is pressed, initiate pathfinding
             FindPath();
     }
 
-    private void OnValidate()
-    {
-        // In the Editor, re‐run pathfinding whenever you tweak references
-        if (!Application.isPlaying)
-            FindPath();
-    }
-
-    
-    /// Public entry point: converts markers to grid indices and runs BFS.
+    //Starts the pathfinding process by validating references and calling A*.
     public void FindPath()
     {
         if (gridManager == null || startTransform == null || targetTransform == null)
-            return;  // Ensure all references are assigned
+            return;
 
-        // Convert world‐space marker positions into grid cell indices
-        Vector2Int startIdx = gridManager.GetXYIndex(startTransform.position);
-        Vector2Int targetIdx = gridManager.GetXYIndex(targetTransform.position);
-
-        // Run the BFS pathfinder
-        pathPositions = BFSPath(startIdx, targetIdx);
-
-        Debug.Log($"Path length = {(pathPositions == null ? 0 : pathPositions.Count)}");
+        AStarPath(
+            gridManager.GetXYIndex(startTransform.position),
+            gridManager.GetXYIndex(targetTransform.position)
+        );
     }
 
-    
-    /// BFS implementation on a grid.
-    /// Finds the shortest unweighted path from start to goal.
-    private List<Vector3> BFSPath(Vector2Int start, Vector2Int goal)
+    //Implements A* to find a path from start to goal on the grid.
+    private void AStarPath(Vector2Int start, Vector2Int goal)
     {
-        var queue = new Queue<Vector2Int>();
-        var visited = new HashSet<Vector2Int>();
-        var parent = new Dictionary<Vector2Int, Vector2Int>();
+        //OpenSet holds nodes to evaluate, closedSet holds nodes already evaluated.
+        var openSet = new List<Vector2Int> { start };
+        var closedSet = new HashSet<Vector2Int>();
+        var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
+        var gScore = new Dictionary<Vector2Int, int> { [start] = 0 };
+        var fScore = new Dictionary<Vector2Int, int> { [start] = Heuristic(start, goal) };
 
-        // Initialize BFS
-        queue.Enqueue(start);
-        visited.Add(start);
+        pathPositions = null;
 
-        bool found = false;
-
-        // Perform BFS until queue is empty or goal is found
-        while (queue.Count > 0)
+        while (openSet.Count > 0)
         {
-            Vector2Int current = queue.Dequeue();
+            //Update visuaization lists for frontier and visited nodes.
+            frontierPositions = openSet.ConvertAll(i =>
+                gridManager.GetNode(i.x, i.y).WorldPosition);
+            visitedPositions.Clear();
+            foreach (var v in closedSet)
+                visitedPositions.Add(
+                    gridManager.GetNode(v.x, v.y).WorldPosition);
 
+            //Pick the node in openSet with the lowest fScore as current.
+            var current = openSet[0];
+            foreach (var node in openSet)
+                if (fScore.ContainsKey(node) && fScore[node] < fScore[current])
+                    current = node;
+
+            // If current is goal, reconstruct path and return.
             if (current == goal)
             {
-                found = true;
-                break;
+                pathPositions = ReconstructPath(cameFrom, current);
+                return;
             }
 
-            // Examine each 4-direction neighbor
-            foreach (var nbr in gridManager.GetNeighborsXY(current))
-            {
-                var nodeInfo = gridManager.GetNode(nbr.x, nbr.y);
+            openSet.Remove(current);
+            closedSet.Add(current);
 
-                // Enqueue if walkable and not yet visited
-                if (nodeInfo.Walkable && !visited.Contains(nbr))
+            // Explore neighbors of the current node.
+            foreach (var n in gridManager.GetNeighborsXY(current))
+            {
+                var info = gridManager.GetNode(n.x, n.y);
+                if (!info.Walkable || closedSet.Contains(n))
+                    continue;
+
+                //Calcuate tentative gScore and update if it's better.
+                var tG = gScore[current] + info.Weight;
+                if (!gScore.ContainsKey(n) || tG < gScore[n])
                 {
-                    visited.Add(nbr);
-                    parent[nbr] = current;
-                    queue.Enqueue(nbr);
+                    cameFrom[n] = current;
+                    gScore[n] = tG;
+                    fScore[n] = tG + Heuristic(n, goal);
+                    if (!openSet.Contains(n))
+                        openSet.Add(n);
                 }
             }
         }
-
-        // If no path found, return null
-        if (!found)
-            return null;
-
-        // Reconstruct the path from goal back to start
-        var path = new List<Vector3>();
-        Vector2Int step = goal;
-        while (step != start)
-        {
-            path.Add(gridManager.GetNode(step.x, step.y).WorldPosition);
-            step = parent[step];
-        }
-        // Add the start position at the end
-        path.Add(gridManager.GetNode(start.x, start.y).WorldPosition);
-
-        // Reverse so it's from start → goal
-        path.Reverse();
-        return path;
     }
 
-    
-    /// Draws the found path and start/goal markers in the Scene view.
+    // Reconstructs the path from start to goal using the cameFrom map.
+    private List<Vector3> ReconstructPath(
+        Dictionary<Vector2Int, Vector2Int> cameFrom,
+        Vector2Int current)
+    {
+        var total = new List<Vector3> {
+            gridManager.GetNode(current.x, current.y).WorldPosition
+        };
+        while (cameFrom.ContainsKey(current))
+        {
+            current = cameFrom[current];
+            total.Add(
+                gridManager.GetNode(current.x, current.y).WorldPosition);
+        }
+        total.Reverse();
+        return total;
+    }
+
+    //Calculates the heuristic (Manhattan distance) between two nodes.
+    private int Heuristic(Vector2Int a, Vector2Int b) =>
+        Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+
+    // Draws Gizmos in the scene for frontier, visited, and the final path.
     private void OnDrawGizmos()
     {
-        // Draw the path as magenta lines if available
-        if (pathPositions != null && pathPositions.Count > 1)
+        Gizmos.color = Color.yellow;
+        foreach (var p in frontierPositions)
+            Gizmos.DrawCube(p + Vector3.up * 0.1f, Vector3.one * 0.2f);
+
+        Gizmos.color = Color.cyan;
+        foreach (var p in visitedPositions)
+            Gizmos.DrawCube(p + Vector3.up * 0.1f, Vector3.one * 0.2f);
+
+        Gizmos.color = Color.magenta;
+        if (pathPositions != null)
         {
-            Gizmos.color = Color.magenta;
             for (int i = 0; i < pathPositions.Count - 1; i++)
-            {
-                Gizmos.DrawLine(pathPositions[i], pathPositions[i + 1]);
-            }
+                Gizmos.DrawLine(
+                    pathPositions[i], pathPositions[i + 1]);
         }
 
-        // Draw the start marker (green) and goal marker (red) snapped to the grid
-        if (gridManager != null && startTransform != null && targetTransform != null)
+        if (gridManager != null && startTransform != null)
         {
-            Vector2Int sIdx = gridManager.GetXYIndex(startTransform.position);
-            Vector2Int gIdx = gridManager.GetXYIndex(targetTransform.position);
-
-            Vector3 sPos = gridManager.GetNode(sIdx.x, sIdx.y).WorldPosition;
-            Vector3 gPos = gridManager.GetNode(gIdx.x, gIdx.y).WorldPosition;
-
+            var s = gridManager.GetNode(
+                gridManager.GetXYIndex(startTransform.position).x,
+                gridManager.GetXYIndex(startTransform.position).y)
+                .WorldPosition;
+            var g = gridManager.GetNode(
+                gridManager.GetXYIndex(targetTransform.position).x,
+                gridManager.GetXYIndex(targetTransform.position).y)
+                .WorldPosition;
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(sPos, gridManager.GridSettings.NodeSize * 0.2f);
-
+            Gizmos.DrawSphere(s, 0.2f);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(gPos, gridManager.GridSettings.NodeSize * 0.2f);
+            Gizmos.DrawSphere(g, 0.2f);
         }
     }
 }
