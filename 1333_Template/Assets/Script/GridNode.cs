@@ -1,15 +1,36 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
 
+/// <summary>
+/// Represents a single cell/node in the grid.  
+/// Contains world position, walkability, weight, and a reference to the TerrainType ScriptableObject.
+/// </summary>
+[System.Serializable]
 public struct GridNode
 {
-    public string Name; //Grid Index
-    public Vector3 WorldPosition;
-    public bool Walkable;
-    public int Weight;
-    public TerrainType TerrainType;
+    /// <summary>
+    /// Human‐readable name (e.g., "Cell_3_4").
+    /// </summary>
+    public string Name;
 
-    //future proof: Add faction base walkability 
+    /// <summary>
+    /// World‐space position of the node's center.
+    /// </summary>
+    public Vector3 WorldPosition;
+
+    /// <summary>
+    /// If false, this node is considered blocked/unwalkable.
+    /// </summary>
+    public bool Walkable;
+
+    /// <summary>
+    /// Cost to traverse this node. Higher weight means more costly.
+    /// </summary>
+    public int Weight;
+
+    /// <summary>
+    /// Reference to the ScriptableObject that contains terrain data (color, walkable, weight).
+    /// </summary>
+    public TerrainType TerrainType;
 }
