@@ -16,12 +16,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private TerrainType defaultTerrainType;
 
     [Header("Random Seed Settings")]
-    [SerializeField] private int seed = 0;
-    [SerializeField] private float noiseScale = 0.3f;
-
-    private float noiseOffsetX;
-    private float noiseOffsetY;
-    private GridNode[,] gridNodes;
     [Tooltip("Seed for Perlin noise. Change to get a different terrain layout.")]
     [SerializeField] private int seed = 0;
     [Tooltip("Scale factor for Perlin noise sampling.")]
@@ -57,12 +51,6 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Rebuilds the grid using current seed and notifies Pathfinders.
-    /// </summary>
-    public void InitializeGrid()
-    {
-        if (gridSettings == null || terrainTypes.Count == 0)
-            return; // Cannot build without settings or at least one terrain type
     /// Rebuilds the grid based on current gridSettings, terrainTypes, and seed.  
     /// After creating all nodes, notifies any Pathfinder instances to recalculate.
     /// </summary>
@@ -84,34 +72,9 @@ public class GridManager : MonoBehaviour
         gridNodes = new GridNode[width, height];
 
         for (int x = 0; x < width; x++)
+        {
             for (int y = 0; y < height; y++)
             {
-                // Calculate world position for this node
-                Vector3 worldPos = gridSettings.UseXZPlane
-                    ? new Vector3(x, 0f, y) * size
-                    : new Vector3(x, y, 0f) * size;
-
-                // Sample Perlin noise at this grid point
-                float noiseValue = Mathf.PerlinNoise(
-                    x * noiseScale + noiseOffsetX,
-                    y * noiseScale + noiseOffsetY
-                );
-
-                // Choose a terrain type based on the noise value
-                TerrainType chosenType;
-                int count = terrainTypes.Count;
-                if (count == 0)
-                {
-                    chosenType = defaultTerrainType; // Fallback
-                }
-                else
-                {
-                    int index = Mathf.FloorToInt(noiseValue * count);
-                    index = Mathf.Clamp(index, 0, count - 1);
-                    chosenType = terrainTypes[index];
-                }
-
-                // Create and store the GridNode
                 // Determine world position: use XZ plane or XY plane
                 Vector3 pos = gridSettings.UseXZPlane
                     ? new Vector3(x, 0, y) * size
@@ -133,12 +96,10 @@ public class GridManager : MonoBehaviour
                     TerrainType = type
                 };
             }
+        }
 
         IsInitialized = true;
 
-        // If a Pathfinder exists in the scene, trigger it to recalculate the path
-        Pathfinder pf = Object.FindFirstObjectByType<Pathfinder>();
-        if (pf != null)
         // Notify all Pathfinders to recalculate their paths now that the grid changed
         foreach (var pf in FindObjectsOfType<Pathfinder>())
         {
@@ -146,9 +107,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    
-    /// Change a single node's terrain type at runtime.
-    public void SetTerrainType(int x, int y, TerrainType newType)
     /// <summary>
     /// Assigns a new random seed and rebuilds the grid immediately.
     /// </summary>
@@ -158,23 +116,6 @@ public class GridManager : MonoBehaviour
         InitializeGrid();
     }
 
-        if (x < 0 || x >= gridSettings.GridSizeX ||
-            y < 0 || y >= gridSettings.GridSizeY)
-            throw new System.IndexOutOfRangeException();
-        return gridNodes[x, y];
-    }
-
-    public Vector2Int GetXYIndex(Vector3 wp)
-    {
-        float s = gridSettings.NodeSize;
-        int xi = Mathf.RoundToInt(wp.x / s);
-        int yi = gridSettings.UseXZPlane ? Mathf.RoundToInt(wp.z / s) : Mathf.RoundToInt(wp.y / s);
-        return new Vector2Int(xi, yi);
-    }
-
-    
-    /// Draw a wireframe cube for each node in the Scene view.
-    /// Node color is taken from its TerrainType.
     /// <summary>
     /// Returns the GridNode at grid coordinates (x, y). If grid is not built yet, it will initialize first.
     /// </summary>
@@ -236,7 +177,7 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// Draws wireframe cubes for each node in the Unity Editor to visualize the grid.
-    /// Node color is taken from each node�s TerrainType.GizmoColor.
+    /// Node color is taken from each node’s TerrainType.GizmoColor.
     /// Only draws when showGridGizmos is true.
     /// </summary>
     private void OnDrawGizmos()

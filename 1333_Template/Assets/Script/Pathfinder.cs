@@ -1,25 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]                
-public class Pathfinder : MonoBehaviour
-{
-    [Header("References")]
-    [SerializeField] private GridManager gridManager; //Reference to the GridManager that probides node data.
-    [SerializeField] private Transform startTransform; 
-    [SerializeField] private Transform targetTransform;
-
-    private List<Vector3> pathPositions; // List of world positions representing the found path.
-    private List<Vector3> frontierPositions = new(); // Positions of nodes to be explored.
-    private List<Vector3> visitedPositions = new(); // Pssitions of nodes already explored.
-
-    public IReadOnlyList<Vector3> PathPositions => pathPositions; // Exposes the found path as a ready-only list.
-
-    // Initializes the references for the pathfinder
-    public void Init(GridManager gm, Transform start, Transform target)
-    {
-        // When the game starts playing, automatically find a path once
-        if (Application.isPlaying)
 /// <summary>
 /// Implements A* pathfinding on a grid of GridNodes managed by GridManager.
 /// Visualizes the frontier (yellow), visited (cyan), and final path (magenta) using Gizmos.
@@ -84,14 +65,6 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    private void OnValidate()
-    {
-        if (Input.GetKeyDown(KeyCode.R)) // When the "R" key is pressed, initiate pathfinding
-            FindPath();
-    }
-
-    
-    /// Public entry point: converts markers to grid indices and runs BFS.
     /// <summary>
     /// Validates references and starts A* from the grid indices under startTransform to targetTransform.
     /// </summary>
@@ -100,22 +73,6 @@ public class Pathfinder : MonoBehaviour
         if (gridManager == null || startTransform == null || targetTransform == null)
             return;
 
-        // Convert world‐space marker positions into grid cell indices
-        Vector2Int startIdx = gridManager.GetXYIndex(startTransform.position);
-        Vector2Int targetIdx = gridManager.GetXYIndex(targetTransform.position);
-
-        // Run the BFS pathfinder
-        pathPositions = BFSPath(startIdx, targetIdx);
-
-        Debug.Log($"Path length = {(pathPositions == null ? 0 : pathPositions.Count)}");
-    }
-
-    //Implements A* to find a path from start to goal on the grid.
-    private void AStarPath(Vector2Int start, Vector2Int goal)
-    {
-        var queue = new Queue<Vector2Int>();
-        var visited = new HashSet<Vector2Int>();
-        var parent = new Dictionary<Vector2Int, Vector2Int>();
         Vector2Int startIdx = gridManager.GetXYIndex(startTransform.position);
         Vector2Int targetIdx = gridManager.GetXYIndex(targetTransform.position);
         AStarPath(startIdx, targetIdx);
@@ -139,14 +96,10 @@ public class Pathfinder : MonoBehaviour
         var gScore = new Dictionary<Vector2Int, int> { [start] = 0 };
         var fScore = new Dictionary<Vector2Int, int> { [start] = Heuristic(start, goal) };
 
-        // Initialize BFS
-        queue.Enqueue(start);
-        visited.Add(start);
+        pathPositions = null;
 
         while (openSet.Count > 0)
         {
-            Vector2Int current = queue.Dequeue();
-
             // Update visualization lists (frontier = openSet, visited = closedSet)
             frontierPositions = openSet.ConvertAll(idx =>
                 gridManager.GetNode(idx.x, idx.y).WorldPosition
@@ -176,54 +129,6 @@ public class Pathfinder : MonoBehaviour
                 return;
             }
 
-            // Examine each 4-direction neighbor
-            foreach (var nbr in gridManager.GetNeighborsXY(current))
-            {
-                var info = gridManager.GetNode(n.x, n.y);
-                if (!info.Walkable || closedSet.Contains(n))
-                    continue;
-
-                //Calcuate tentative gScore and update if it's better.
-                var tG = gScore[current] + info.Weight;
-                if (!gScore.ContainsKey(n) || tG < gScore[n])
-                {
-                    cameFrom[n] = current;
-                    gScore[n] = tG;
-                    fScore[n] = tG + Heuristic(n, goal);
-                    if (!openSet.Contains(n))
-                        openSet.Add(n);
-                }
-            }
-        }
-    }
-
-    // Reconstructs the path from start to goal using the cameFrom map.
-    private List<Vector3> ReconstructPath(
-        Dictionary<Vector2Int, Vector2Int> cameFrom,
-        Vector2Int current)
-    {
-        var total = new List<Vector3> {
-            gridManager.GetNode(current.x, current.y).WorldPosition
-        };
-        while (cameFrom.ContainsKey(current))
-        {
-            current = cameFrom[current];
-            total.Add(
-                gridManager.GetNode(current.x, current.y).WorldPosition);
-        }
-        total.Reverse();
-        return total;
-    }
-
-    //Calculates the heuristic (Manhattan distance) between two nodes.
-    private int Heuristic(Vector2Int a, Vector2Int b) =>
-        Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-
-    // Draws Gizmos in the scene for frontier, visited, and the final path.
-    private void OnDrawGizmos()
-    {
-        // Draw the path as magenta lines if available
-        if (pathPositions != null && pathPositions.Count > 1)
             openSet.Remove(current);
             closedSet.Add(current);
 
@@ -321,27 +226,12 @@ public class Pathfinder : MonoBehaviour
         Gizmos.color = Color.magenta;
         if (pathPositions != null)
         {
-            Gizmos.color = Color.magenta;
             for (int i = 0; i < pathPositions.Count - 1; i++)
-                Gizmos.DrawLine(
-                    pathPositions[i], pathPositions[i + 1]);
+            {
+                Gizmos.DrawLine(pathPositions[i], pathPositions[i + 1]);
+            }
         }
 
-        // Draw the start marker (green) and goal marker (red) snapped to the grid
-        if (gridManager != null && startTransform != null && targetTransform != null)
-        {
-            var s = gridManager.GetNode(
-                gridManager.GetXYIndex(startTransform.position).x,
-                gridManager.GetXYIndex(startTransform.position).y)
-                .WorldPosition;
-            var g = gridManager.GetNode(
-                gridManager.GetXYIndex(targetTransform.position).x,
-                gridManager.GetXYIndex(targetTransform.position).y)
-                .WorldPosition;
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(s, 0.2f);
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(gPos, gridManager.GridSettings.NodeSize * 0.2f);
         // Draw start/goal spheres if available
         if (gridManager != null && startTransform != null && targetTransform != null)
         {
