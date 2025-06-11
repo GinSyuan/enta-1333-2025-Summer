@@ -136,8 +136,10 @@ public class Pathfinder : MonoBehaviour
             foreach (var neighbor in gridManager.GetNeighborsXY(current))
             {
                 GridNode info = gridManager.GetNode(neighbor.x, neighbor.y);
-                if (!info.Walkable || closedSet.Contains(neighbor))
+                
+                if (!info.Walkable || info.Occupied || closedSet.Contains(neighbor))
                     continue;
+
 
                 int tentativeG = gScore[current] + info.Weight;
 

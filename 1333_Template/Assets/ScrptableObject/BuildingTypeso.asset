@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c089890c67db245b4191e854c2e28a, type: 3}
+  m_Name: BuildingTypeso
+  m_EditorClassIdentifier: 
+  Building:
+  - BuildingName: wall
+    BuildingIcon: {fileID: 0}
+    Prefab: {fileID: 1538549784744441219, guid: 200a38acbd836af46bfa582d0b0c3ad9, type: 3}
+    Size: {x: 2, y: 4}
+    Health: 0
+    Team: 0
+  - BuildingName: Gate
+    BuildingIcon: {fileID: 0}
+    Prefab: {fileID: 5857806330386348187, guid: b34a7956f18190e44ab45927def11184, type: 3}
+    Size: {x: 3, y: 7}
+    Health: 0
+    Team: 0
+  - BuildingName: Fence
+    BuildingIcon: {fileID: 0}
+    Prefab: {fileID: 0}
+    Size: {x: 0, y: 0}
+    Health: 0
+    Team: 0
+  - BuildingName: Tower
+    BuildingIcon: {fileID: 0}
+    Prefab: {fileID: 0}
+    Size: {x: 0, y: 0}
+    Health: 0
+    Team: 0

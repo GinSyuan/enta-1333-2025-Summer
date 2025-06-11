@@ -33,4 +33,7 @@ public struct GridNode
     /// Reference to the ScriptableObject that contains terrain data (color, walkable, weight).
     /// </summary>
     public TerrainType TerrainType;
+
+
+    public bool Occupied;
 }
