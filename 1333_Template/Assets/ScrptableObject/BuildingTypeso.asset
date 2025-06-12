@@ -27,13 +27,13 @@ MonoBehaviour:
     Team: 0
   - BuildingName: Fence
     BuildingIcon: {fileID: 0}
-    Prefab: {fileID: 0}
-    Size: {x: 0, y: 0}
+    Prefab: {fileID: 844553045610966724, guid: 500d02f73695353408c03cb42b89afb2, type: 3}
+    Size: {x: 2, y: 6}
     Health: 0
     Team: 0
   - BuildingName: Tower
     BuildingIcon: {fileID: 0}
-    Prefab: {fileID: 0}
-    Size: {x: 0, y: 0}
+    Prefab: {fileID: 1104004900382858661, guid: 2b67cd66341d21c4daeb88e2ed53cb45, type: 3}
+    Size: {x: 3, y: 3}
     Health: 0
     Team: 0

@@ -742,9 +742,9 @@ Transform:
   m_GameObject: {fileID: 1274413176}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.6, y: -0.02, z: 4.68}
-  m_LocalScale: {x: 1.2404, y: 1.2404, z: 1.2404}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 14.16, y: 0, z: 14.87}
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -779,8 +779,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSettings: {fileID: 11400000, guid: 8aaa91bd454574e42b9a115993d2d8d8, type: 2}
   terrainTypes:
-  - {fileID: 11400000, guid: a205ee89f0a7fe048b4a2086ea4c98ab, type: 2}
-  - {fileID: 11400000, guid: a205ee89f0a7fe048b4a2086ea4c98ab, type: 2}
+  - {fileID: 11400000, guid: 8e97b4fd174048642adee117a1a0b245, type: 2}
+  - {fileID: 11400000, guid: e3db2902ccf0935429416b79b7b67b55, type: 2}
   - {fileID: 11400000, guid: a205ee89f0a7fe048b4a2086ea4c98ab, type: 2}
   - {fileID: 11400000, guid: a205ee89f0a7fe048b4a2086ea4c98ab, type: 2}
   - {fileID: 11400000, guid: a205ee89f0a7fe048b4a2086ea4c98ab, type: 2}
