@@ -10,6 +10,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Pathfinder : MonoBehaviour
 {
+    
+    private static bool _globalShowGizmos = true;
+    public static bool GlobalShowGizmos => _globalShowGizmos;
+    
     [Header("References")]
     [Tooltip("Reference to the GridManager that provides node data.")]
     [SerializeField] private GridManager gridManager;
@@ -25,6 +29,8 @@ public class Pathfinder : MonoBehaviour
     private List<Vector3> pathPositions;             // World positions for the computed path
     private List<Vector3> frontierPositions = new(); // World positions of nodes in the open set
     private List<Vector3> visitedPositions = new();  // World positions of nodes in the closed set
+
+    
 
     /// <summary>
     /// Exposes the computed path as a read-only list of world positions.
@@ -60,8 +66,8 @@ public class Pathfinder : MonoBehaviour
         // Toggle Gizmos on/off with 'G'
         if (Input.GetKeyDown(KeyCode.G))
         {
-            showGizmos = !showGizmos;
-            Debug.Log($"ShowGizmos = {showGizmos}");
+            _globalShowGizmos = !_globalShowGizmos;
+            Debug.Log($"Pathfinder gizmos = {_globalShowGizmos}");
         }
     }
 
@@ -136,8 +142,10 @@ public class Pathfinder : MonoBehaviour
             foreach (var neighbor in gridManager.GetNeighborsXY(current))
             {
                 GridNode info = gridManager.GetNode(neighbor.x, neighbor.y);
-                if (!info.Walkable || closedSet.Contains(neighbor))
+                
+                if (!info.Walkable || info.Occupied || closedSet.Contains(neighbor))
                     continue;
+
 
                 int tentativeG = gScore[current] + info.Weight;
 
@@ -205,7 +213,7 @@ public class Pathfinder : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        if (!showGizmos)
+        if (!_globalShowGizmos)
             return;
 
         // Draw frontier (open set) in yellow

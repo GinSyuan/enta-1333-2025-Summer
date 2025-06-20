@@ -196,4 +196,19 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+
+    public bool IsCellFree(int x, int y)
+    {
+        var node = GetNode(x, y);
+        return node.Walkable && !node.Occupied;
+    }
+
+    public void SetCellOccupied(int x, int y, bool occupied)
+    {
+        var node = GetNode(x, y);
+        node.Occupied = occupied;
+        gridNodes[x, y] = node;  
+    }
+
 }
