@@ -6,10 +6,17 @@ using UnityEngine;
 /// </summary>
 public enum FacingDirection
 {
-    PositiveX,   // Face toward +X axis
-    NegativeX,   // Face toward –X axis
-    PositiveZ,   // Face toward +Z axis
-    NegativeZ    // Face toward –Z axis
+    /// <summary>Face toward the +X axis.</summary>
+    PositiveX,
+
+    /// <summary>Face toward the –X axis.</summary>
+    NegativeX,
+
+    /// <summary>Face toward the +Z axis.</summary>
+    PositiveZ,
+
+    /// <summary>Face toward the –Z axis.</summary>
+    NegativeZ
 }
 
 /// <summary>
@@ -40,7 +47,7 @@ public class ArmyManager : MonoBehaviour
     [System.Serializable]
     public class ArmyDefinition
     {
-        [Tooltip("A name for this army (e.g. PlayerArmy, EnemyArmy)")]
+        [Tooltip("A friendly name for this army (e.g. PlayerArmy, EnemyArmy)")]
         public string armyName;
 
         [Tooltip("The Transform around which units of this army will be spawned")]
@@ -49,7 +56,7 @@ public class ArmyManager : MonoBehaviour
         [Tooltip("Spacing between units on the X-axis")]
         public float spacing = 1.5f;
 
-        [Tooltip("Assign a material to visually distinguish this army")]
+        [Tooltip("Assign a unique material to visually distinguish this army")]
         public Material armyMaterial;
 
         [Tooltip("Which way this entire army should face when spawned")]
@@ -139,7 +146,7 @@ public class ArmyManager : MonoBehaviour
                 // Rename the GameObject to include type name, army name, and index
                 unitGO.name = $"{uc.unitType.typeName}_{army.armyName}_{unitIndex}";
 
-                // If a material override is provided, take down all the child object render and use army.armyMaterial
+                // If a material override is provided, apply it to the first Renderer found
                 if (army.armyMaterial != null)
                 {
                     Renderer[] renderers = unitGO.GetComponentsInChildren<Renderer>();
