@@ -6,7 +6,7 @@ using UnityEngine;
 /// Handles camera panning, zooming, and rotation based on keyboard and mouse inputs.
 /// - WASD or arrow keys: pan horizontally and vertically.
 /// - Middle mouse drag: pan horizontally/vertically by dragging.
-/// - Mouse scroll wheel: zoom in/out.
+/// - Mouse scroll wheel: zoom in/out (when enabled).
 /// - Q/E keys: rotate camera around Y axis.
 /// Clamps camera within specified boundaries.
 /// </summary>
@@ -32,11 +32,11 @@ public class CameraController : MonoBehaviour
     [Tooltip("Speed at which the camera rotates around the Y axis.")]
     public float rotationSpeed = 50f;
 
+    [HideInInspector]
+    public bool allowScrollZoom = true;  // Enable/disable zoom by scroll wheel
+
     private Vector3 lastMousePosition;
 
-    /// <summary>
-    /// Called once per frame to handle input and update camera transform.
-    /// </summary>
     private void Update()
     {
         Vector3 pos = transform.position;
@@ -60,9 +60,12 @@ public class CameraController : MonoBehaviour
             lastMousePosition = Input.mousePosition;
         }
 
-        // Zoom via scroll wheel
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        pos.y -= scroll * zoomSpeed * 100f * Time.deltaTime;
+        // Zoom via scroll wheel (only if allowed)
+        if (allowScrollZoom)
+        {
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            pos.y -= scroll * zoomSpeed * 100f * Time.deltaTime;
+        }
 
         // Rotation around Y axis using Q/E keys
         if (Input.GetKey(KeyCode.Q))
