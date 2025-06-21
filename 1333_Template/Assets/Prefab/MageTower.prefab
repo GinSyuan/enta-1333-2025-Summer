@@ -80,7 +80,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fc4ed9ef41f9dc944af60388921a8746, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.71
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fc4ed9ef41f9dc944af60388921a8746, type: 3}
       propertyPath: m_LocalPosition.z
@@ -161,6 +161,7 @@ MonoBehaviour:
   spawnInterval: 2
   spawnLocator: {fileID: 5869887430706288753}
   rallyPoint: {fileID: 133902939088794221}
+  formationSpacing: 1.2
 --- !u!114 &6763100731515655885
 MonoBehaviour:
   m_ObjectHideFlags: 0
