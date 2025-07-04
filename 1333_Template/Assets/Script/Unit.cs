@@ -1,30 +1,38 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Handles unit movement, detection, melee attack, and debug gizmos
+/// Handles unit health, detection, melee attacks, and drawing gizmos
 /// </summary>
 public class Unit : MonoBehaviour
 {
     [Header("Combat Stats")]
-    public int maxHealth = 100;                // maximum health
-    public int currentHealth;                  // current health
+    public int maxHealth = 100;
+    public int currentHealth;
 
     [Header("Ranges")]
-    public float detectRange = 5f;             // how far the unit can see enemies
-    public float attackRange = 1.5f;           // how close it needs to be to attack
+    public float detectRange = 5f;
+    public float attackRange = 1.5f;
 
-    public int attackDamage = 20;              // damage per hit
-    public float attackCooldown = 1.0f;        // time between attacks
+    public int attackDamage = 20;
+    public float attackCooldown = 1.0f;
 
     [Header("Faction")]
-    public int factionID = 0;                  // 0 = player, 1 = enemy
+    public int factionID = 0;  // 0=player, 1=enemy
 
-    private float attackTimer = 0f;            // cooldown timer
+    private float attackTimer = 0f;
     private UnitManager unitManager;
-    private Unit currentTarget;                // current attack target
+    private Unit currentTarget;
 
-    // Shared toggle for gizmos
-    private static bool showGizmos = true;
+    /// <summary>
+    /// Static toggle to show or hide detection/attack range
+    /// controlled by the GameManager
+    /// </summary>
+    public static bool showRangeGizmos = true;
+
+    /// <summary>
+    /// Static toggle to enable/disable combat globally
+    /// </summary>
+    public static bool isCombatEnabled = true;
 
     private void Start()
     {
@@ -36,13 +44,8 @@ public class Unit : MonoBehaviour
     {
         attackTimer -= Time.deltaTime;
 
-        // allow user to press G to toggle gizmos
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            showGizmos = !showGizmos;
-        }
+        if (!isCombatEnabled) return;
 
-        // if no target or target is dead, find a new one
         if (currentTarget == null || currentTarget.currentHealth <= 0)
         {
             currentTarget = FindNearestEnemyInDetectRange();
@@ -54,16 +57,15 @@ public class Unit : MonoBehaviour
 
             if (dist > attackRange)
             {
-                // move closer to target
+                // Move closer
                 transform.position = Vector3.MoveTowards(
                     transform.position,
                     currentTarget.transform.position,
-                    2f * Time.deltaTime  // change 2f to your movement speed if needed
+                    2f * Time.deltaTime
                 );
             }
             else
             {
-                // attack if cooldown is ready
                 if (attackTimer <= 0f)
                 {
                     currentTarget.TakeDamage(attackDamage);
@@ -73,9 +75,6 @@ public class Unit : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Finds the nearest enemy within detection range
-    /// </summary>
     private Unit FindNearestEnemyInDetectRange()
     {
         float minDist = float.MaxValue;
@@ -99,9 +98,6 @@ public class Unit : MonoBehaviour
         return nearestEnemy;
     }
 
-    /// <summary>
-    /// Applies damage to this unit
-    /// </summary>
     public void TakeDamage(int dmg)
     {
         currentHealth -= dmg;
@@ -111,34 +107,36 @@ public class Unit : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Handles unit death and removal from UnitManager
-    /// </summary>
     private void Die()
     {
-        Debug.Log($"{gameObject.name} died");
+        Debug.Log($"{gameObject.name} died.");
 
-        // remove from UnitManager
         if (unitManager != null)
         {
-            var entryToRemove = unitManager.Units.Find(e => e.unitTransform == this.transform);
-            if (entryToRemove != null)
-                unitManager.Units.Remove(entryToRemove);
+            var entry = unitManager.Units.Find(e => e.unitTransform == this.transform);
+            if (entry != null)
+                unitManager.Units.Remove(entry);
         }
 
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Draws debug gizmos:
-    /// - detection range (yellow)
-    /// - attack range (red)
-    /// - health bar (gray background + red or green fill)
-    /// </summary>
     private void OnDrawGizmos()
     {
-        // show detection + attack range only if toggled on
-        if (showGizmos)
+        // Always draw health bar
+        float healthPercent = (maxHealth > 0) ? (float)currentHealth / maxHealth : 0f;
+        Vector3 barPos = transform.position + Vector3.up * 2f;
+
+        // gray background
+        Gizmos.color = Color.gray;
+        Gizmos.DrawCube(barPos, new Vector3(1f, 0.1f, 0.1f));
+
+        // colored health
+        Gizmos.color = (factionID == 0) ? Color.green : Color.red;
+        Gizmos.DrawCube(barPos, new Vector3(healthPercent, 0.1f, 0.1f));
+
+        // Only draw detection/attack range if toggled on
+        if (showRangeGizmos)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectRange);
@@ -146,17 +144,5 @@ public class Unit : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackRange);
         }
-
-        // always draw health bar
-        float healthPercent = (maxHealth > 0) ? (float)currentHealth / maxHealth : 0f;
-        Vector3 barPos = transform.position + Vector3.up * 2f;
-
-        // background
-        Gizmos.color = Color.gray;
-        Gizmos.DrawCube(barPos, new Vector3(1f, 0.1f, 0.1f));
-
-        // fill
-        Gizmos.color = (factionID == 0) ? Color.green : Color.red;
-        Gizmos.DrawCube(barPos, new Vector3(healthPercent, 0.1f, 0.1f));
     }
 }
