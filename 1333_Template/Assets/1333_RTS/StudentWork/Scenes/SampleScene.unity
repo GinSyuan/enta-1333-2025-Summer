@@ -477,7 +477,7 @@ MonoBehaviour:
     facing: 2
     unitCounts:
     - unitType: {fileID: 11400000, guid: bba9d610321cc8e47bfc5f9251a9425d, type: 2}
-      count: 8
+      count: 15
   - armyName: EnemyArmy
     spawnCenter: {fileID: 1194928012}
     spacing: 1
@@ -947,7 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   units: []
-  moveSpeed: 5
+  moveSpeed: 10
 --- !u!4 &1385425282
 Transform:
   m_ObjectHideFlags: 0
