@@ -476,50 +476,8 @@ MonoBehaviour:
     armyMaterial: {fileID: 0}
     facing: 2
     unitCounts:
-    - unitType: {fileID: 11400000, guid: 605adeeff8717f144804fd30a13ac235, type: 2}
-      count: 1
     - unitType: {fileID: 11400000, guid: bba9d610321cc8e47bfc5f9251a9425d, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
+      count: 8
   - armyName: EnemyArmy
     spawnCenter: {fileID: 1194928012}
     spacing: 1
@@ -527,13 +485,7 @@ MonoBehaviour:
     facing: 3
     unitCounts:
     - unitType: {fileID: 11400000, guid: 605adeeff8717f144804fd30a13ac235, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: bba9d610321cc8e47bfc5f9251a9425d, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
-    - unitType: {fileID: 11400000, guid: e5c0b92704469da418d2a67d7235a1db, type: 2}
-      count: 1
+      count: 5
 --- !u!4 &541898855
 Transform:
   m_ObjectHideFlags: 0

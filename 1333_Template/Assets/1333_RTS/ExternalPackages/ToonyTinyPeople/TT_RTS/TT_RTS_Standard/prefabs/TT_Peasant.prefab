@@ -10135,6 +10135,7 @@ GameObject:
   - component: {fileID: 408984}
   - component: {fileID: 9589574}
   - component: {fileID: 4653327939402487779}
+  - component: {fileID: 6335522903399292907}
   m_Layer: 0
   m_Name: TT_Peasant
   m_TagString: Untagged
@@ -10262,6 +10263,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.51, z: 1}
   m_Center: {x: 0, y: 0.79, z: 0}
+--- !u!114 &6335522903399292907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 559bf63611b42de459420aabe2d6c84c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  detectRange: 7
+  attackRange: 2
+  attackDamage: 20
+  attackCooldown: 1
+  factionID: 1
 --- !u!1 &156840
 GameObject:
   m_ObjectHideFlags: 0
