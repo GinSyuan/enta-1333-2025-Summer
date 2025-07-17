@@ -34,15 +34,42 @@ public class Unit : MonoBehaviour
     /// </summary>
     public static bool isCombatEnabled = true;
 
+  
+    private float idleTimer = 0f;
+    private bool isIdleSoundPlayed = false;
+    private Vector3 lastPosition;
+
     private void Start()
     {
         currentHealth = maxHealth;
         unitManager = FindObjectOfType<UnitManager>();
+
+        lastPosition = transform.position;
     }
 
     private void Update()
     {
         attackTimer -= Time.deltaTime;
+
+    
+        if (Vector3.Distance(transform.position, lastPosition) > 0.1f)
+        {
+            idleTimer = 0f;
+            lastPosition = transform.position;
+            isIdleSoundPlayed = false;
+        }
+        else
+        {
+            idleTimer += Time.deltaTime;
+            if (idleTimer >= 10f && !isIdleSoundPlayed)
+            {
+                if (factionID == 0)
+                {
+                    AudioManager.Instance.PlayBored();
+                }
+                isIdleSoundPlayed = true;
+            }
+        }
 
         if (!isCombatEnabled) return;
 
@@ -70,6 +97,8 @@ public class Unit : MonoBehaviour
                 {
                     currentTarget.TakeDamage(attackDamage);
                     attackTimer = attackCooldown;
+
+                    AudioManager.Instance.PlayCombat();
                 }
             }
         }

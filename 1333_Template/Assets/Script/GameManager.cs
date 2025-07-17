@@ -1,20 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// The GameManager is responsible for initializing core systems at startup
-/// and handling global input controls for toggles.
-/// </summary>
 public class GameManager : MonoBehaviour
 {
     [Header("References")]
     [Tooltip("Reference to the GridManager component that handles grid creation and pathfinding.")]
     [SerializeField] private GridManager gridManager;
 
-    /// <summary>
-    /// On Awake, initialize the grid so that all dependent systems have a valid grid to work on.
-    /// </summary>
+    [Tooltip("Reference to the main menu UI GameObject.")]
+    [SerializeField] private GameObject mainMenuUI;
+
+    [Tooltip("Reference to the player GameObject.")]
+    public Transform player;
+
+    [Tooltip("Reference to gameplay-related UI (optional).")]
+    [SerializeField] private GameObject gameplayUI;
+
+    private bool gameStarted = false;
+
+    public void SaveGame()
+    {
+        PlayerData data = new PlayerData(player);
+        SaveSystem.SaveGame(data);
+    }
+
+    public void LoadGame()
+    {
+        PlayerData data = SaveSystem.LoadGame();
+        if (data != null)
+        {
+            player.position = new Vector3(data.playerX, data.playerY, 0f);
+        }
+    }
+
     private void Awake()
     {
         if (gridManager != null)
@@ -25,13 +45,37 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("GameManager: GridManager reference is missing in the Inspector.");
         }
+
+    
+        if (mainMenuUI != null)
+            mainMenuUI.SetActive(true);
+
+        if (gameplayUI != null)
+            gameplayUI.SetActive(false);
+
+        if (player != null)
+            player.gameObject.SetActive(false); 
     }
 
-    /// <summary>
-    /// Handle global input for toggling combat and unit gizmos.
-    /// </summary>
+    public void StartGame()
+    {
+
+        if (mainMenuUI != null)
+            mainMenuUI.SetActive(false);
+
+        if (gameplayUI != null)
+            gameplayUI.SetActive(true);
+
+        if (player != null)
+            player.gameObject.SetActive(true);
+
+        gameStarted = true;
+    }
+
     private void Update()
     {
+        if (!gameStarted) return;
+
         // Toggle unit range gizmos with H
         if (Input.GetKeyDown(KeyCode.H))
         {

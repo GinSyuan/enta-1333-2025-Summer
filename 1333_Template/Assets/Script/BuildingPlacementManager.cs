@@ -166,6 +166,8 @@ public class BuildingPlacementManager : MonoBehaviour
         Destroy(ghost.gameObject);
         ghost = null;
         selectedData = null;
+
+        AudioManager.Instance.PlayPlaceBuilding();
     }
 
     private void CancelPlacement()
