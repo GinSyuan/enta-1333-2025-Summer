@@ -31,6 +31,8 @@ public class PixelFormationController : MonoBehaviour
         {
             originalPositions.Add(u.unitTransform.position);
         }
+
+        showGizmos = false;
     }
 
     private void Update()

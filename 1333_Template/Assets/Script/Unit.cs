@@ -45,6 +45,7 @@ public class Unit : MonoBehaviour
         unitManager = FindObjectOfType<UnitManager>();
 
         lastPosition = transform.position;
+        showRangeGizmos = false;
     }
 
     private void Update()

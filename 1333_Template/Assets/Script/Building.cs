@@ -69,13 +69,14 @@ public class Building : MonoBehaviour
         if (maxHealth <= 0) return;
 
         float percent = (float)Health / maxHealth;
-        Vector3 barPos = transform.position + Vector3.up * 3f;
 
-        // Draw background of health bar
+    
+        Vector3 barPos = transform.position + Vector3.up * 6f;
+
         Gizmos.color = Color.gray;
         Gizmos.DrawCube(barPos, new Vector3(2f, 0.2f, 0.1f));
 
-        // Draw current health in team color
+ 
         Color barColor = (Team == 0) ? Color.green : Color.red;
         Gizmos.color = barColor;
         Gizmos.DrawCube(barPos, new Vector3(2f * percent, 0.2f, 0.1f));
