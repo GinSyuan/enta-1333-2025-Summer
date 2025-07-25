@@ -50,6 +50,14 @@ public class Pathfinder : MonoBehaviour
         targetTransform = target;
     }
 
+    private void Start()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+#endif
+        _globalShowGizmos = false;
+    }
+
     /// <summary>
     /// In Update:
     /// - Press 'R' to rerun the pathfinding algorithm from start to target.

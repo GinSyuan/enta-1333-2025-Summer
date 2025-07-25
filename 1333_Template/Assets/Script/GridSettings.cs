@@ -7,9 +7,9 @@ public class GridSettings : ScriptableObject
 {
     [Header("Grid Dimensions")]
     [Tooltip("Number of columns in the grid.")]
-    [SerializeField] private int gridSizeX = 10;
+    [SerializeField] private int gridSizeX = 500;
     [Tooltip("Number of rows in the grid.")]
-    [SerializeField] private int gridSizeY = 10;
+    [SerializeField] private int gridSizeY = 500;
 
     [Header("Node Appearance")]
     [Tooltip("Size of each grid node in world units.")]

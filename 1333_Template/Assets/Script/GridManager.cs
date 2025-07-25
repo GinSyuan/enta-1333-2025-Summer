@@ -30,6 +30,14 @@ public class GridManager : MonoBehaviour
     private GridNode[,] gridNodes;
     public bool IsInitialized { get; private set; }
 
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+#endif
+        showGridGizmos = false;
+    }
+
     /// <summary>
     /// In Update, pressing 'G' toggles whether grid wireframe Gizmos are drawn.
     /// </summary>

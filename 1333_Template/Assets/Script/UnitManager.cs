@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class UnitManager : MonoBehaviour
 {
+    /// <summary>
+    /// A data container for each unit, holding its transform, target, path, etc.
+    /// </summary>
     [System.Serializable]
     public class UnitEntry
     {
@@ -17,12 +20,12 @@ public class UnitManager : MonoBehaviour
         [Tooltip("Empty GameObject used as the target marker for pathfinding.")]
         public Transform targetTransform;
 
-        [HideInInspector] public Pathfinder pathfinder;
-        [HideInInspector] public List<Vector3> path;
-        [HideInInspector] public int pathIndex;
-        [HideInInspector] public Vector3 initialPosition;
+        [HideInInspector] public Pathfinder pathfinder;     // Pathfinder component for this unit
+        [HideInInspector] public List<Vector3> path;        // The current calculated path
+        [HideInInspector] public int pathIndex;             // Which waypoint in the path we are currently following
+        [HideInInspector] public Vector3 initialPosition;   // Remembered starting position for resetting
 
-        [HideInInspector] public Vector2Int lastGridIndex;
+        [HideInInspector] public Vector2Int lastGridIndex;  // Last known grid cell of this unit
     }
 
     [Header("Units Settings")]
@@ -36,7 +39,7 @@ public class UnitManager : MonoBehaviour
     private GridManager gridManager;
 
     /// <summary>
-    /// Exposes the list of units so other scripts can add entries at runtime.
+    /// Public accessor for other scripts to get the list of units.
     /// </summary>
     public List<UnitEntry> Units => units;
 
@@ -49,11 +52,12 @@ public class UnitManager : MonoBehaviour
             return;
         }
 
+        // Initialize each unit
         foreach (var u in units)
         {
             u.initialPosition = u.unitTransform.position;
 
-            // If targetTransform is not assigned in the Inspector, create one at the unit's position
+            // If no target transform is assigned, create a marker object
             if (u.targetTransform == null)
             {
                 GameObject marker = new GameObject($"{u.unitTransform.name}_TargetMarker");
@@ -61,14 +65,16 @@ public class UnitManager : MonoBehaviour
                 u.targetTransform = marker.transform;
             }
 
+            // Add and initialize the Pathfinder component
             u.pathfinder = u.unitTransform.gameObject.AddComponent<Pathfinder>();
             u.pathfinder.Init(gridManager, u.unitTransform, u.targetTransform);
 
+            // Compute initial path
             u.pathfinder.FindPath();
             u.path = new List<Vector3>(u.pathfinder.PathPositions ?? new List<Vector3>());
             u.pathIndex = 0;
 
-            
+            // Mark the unit’s starting grid cell as occupied
             u.lastGridIndex = gridManager.GetXYIndex(u.unitTransform.position);
             gridManager.SetCellOccupied(u.lastGridIndex.x, u.lastGridIndex.y, true);
         }
@@ -76,6 +82,7 @@ public class UnitManager : MonoBehaviour
 
     private void Update()
     {
+        // Press R to randomize grid and reset all units
         if (Input.GetKeyDown(KeyCode.R))
         {
             gridManager.RandomizeSeedAndRebuild();
@@ -83,22 +90,25 @@ public class UnitManager : MonoBehaviour
             return;
         }
 
+        // Move all units along their path
         foreach (var u in units)
         {
             if (u.path == null || u.pathIndex >= u.path.Count)
                 continue;
 
             Vector3 nextPosition = u.path[u.pathIndex];
+
+            // Move towards the next waypoint
             u.unitTransform.position = Vector3.MoveTowards(
                 u.unitTransform.position,
                 nextPosition,
                 moveSpeed * Time.deltaTime
             );
 
-           
+            // If we reached this waypoint
             if (Vector3.Distance(u.unitTransform.position, nextPosition) < 0.05f)
             {
-                
+                // Update the occupied cells in the grid
                 Vector2Int currentIndex = gridManager.GetXYIndex(u.unitTransform.position);
                 if (currentIndex != u.lastGridIndex)
                 {
@@ -107,24 +117,28 @@ public class UnitManager : MonoBehaviour
                     u.lastGridIndex = currentIndex;
                 }
 
+                // Advance to the next waypoint
                 u.pathIndex++;
             }
         }
     }
 
+    /// <summary>
+    /// Resets all units to their initial positions and recomputes their paths.
+    /// </summary>
     private void ResetUnits()
     {
         foreach (var u in units)
         {
-            
+            // Reset position
             u.unitTransform.position = u.initialPosition;
 
-            
+            // Recompute path
             u.pathfinder.FindPath();
             u.path = new List<Vector3>(u.pathfinder.PathPositions ?? new List<Vector3>());
             u.pathIndex = 0;
 
-            
+            // Update grid cell occupancy
             u.lastGridIndex = gridManager.GetXYIndex(u.unitTransform.position);
             gridManager.SetCellOccupied(u.lastGridIndex.x, u.lastGridIndex.y, true);
         }

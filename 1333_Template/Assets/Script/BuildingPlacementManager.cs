@@ -16,22 +16,17 @@ public class BuildingPlacementManager : MonoBehaviour
     private Building ghost;
     private BuildingData selectedData;
     private int rotationIndex;
-    private Vector3 baseEuler; // prefab's original Euler angles
+    private Vector3 baseEuler;
 
-    // Transparent material state for ghost
     private List<Renderer> _renderers;
     private List<Material[]> _originalMaterials;
 
-    /// <summary>
-    /// Effective footprint size, swaps x/y when rotated 90° or 270°
-    /// </summary>
+    private bool firstBuildingPlaced = false;
+
     private Vector2Int EffectiveSize => (rotationIndex % 2 == 0)
         ? selectedData.Size
         : new Vector2Int(selectedData.Size.y, selectedData.Size.x);
 
-    /// <summary>
-    /// Called by UI: begins placement of a selected building type
-    /// </summary>
     public void SelectBuilding(BuildingData data)
     {
         selectedData = data;
@@ -43,16 +38,13 @@ public class BuildingPlacementManager : MonoBehaviour
         if (cameraController != null)
             cameraController.allowScrollZoom = false;
 
-        // Instantiate a "ghost" preview
         GameObject go = Instantiate(selectedData.Prefab);
         ghost = go.GetComponent<Building>();
 
-        
         var ghostTower = go.GetComponent<MageTower>();
         if (ghostTower != null)
             ghostTower.enabled = false;
 
-        // Record original Euler angles and make ghost transparent
         baseEuler = ghost.transform.eulerAngles;
         ghost.transform.rotation = Quaternion.Euler(baseEuler.x, baseEuler.y, baseEuler.z);
         SetGhostMaterialTransparent(ghost);
@@ -62,7 +54,6 @@ public class BuildingPlacementManager : MonoBehaviour
     {
         if (ghost == null) return;
 
-        
         float scroll = Input.mouseScrollDelta.y;
         if (scroll > 0f)
             rotationIndex = (rotationIndex + 1) % 4;
@@ -75,17 +66,14 @@ public class BuildingPlacementManager : MonoBehaviour
             ghost.transform.rotation = Quaternion.Euler(baseEuler.x, newYaw, baseEuler.z);
         }
 
-        
         if (Input.GetMouseButtonDown(1))
         {
             CancelPlacement();
             return;
         }
 
-        
         UpdateGhostPositionAndColor();
 
-        
         if (Input.GetMouseButtonDown(0) && CanPlaceGhostAt(GetClampedOrigin()))
             PlaceBuilding();
     }
@@ -142,30 +130,36 @@ public class BuildingPlacementManager : MonoBehaviour
             (EffectiveSize.y - 1) * s * 0.5f
         );
 
-
         GameObject realGo = Instantiate(
             selectedData.Prefab,
             basePos + pivotOffset,
             ghost.transform.rotation
         );
 
-        
         Building b = realGo.GetComponent<Building>();
         b.Initialize(origin, EffectiveSize, selectedData.Health, selectedData.Team, gridManager);
 
-       
         var tower = realGo.GetComponent<MageTower>();
         if (tower != null)
             tower.StartSpawning();
 
-        
         if (cameraController != null)
             cameraController.allowScrollZoom = true;
 
-       
         Destroy(ghost.gameObject);
         ghost = null;
         selectedData = null;
+
+        AudioManager.Instance.PlayPlaceBuilding();
+
+        if (!firstBuildingPlaced)
+        {
+            WaveManager waveManager = FindObjectOfType<WaveManager>();
+            if (waveManager != null)
+                waveManager.StartWaveTimer();
+
+            firstBuildingPlaced = true;
+        }
     }
 
     private void CancelPlacement()

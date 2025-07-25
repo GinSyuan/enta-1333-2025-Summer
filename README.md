@@ -1,47 +1,176 @@
-# enta-1333-2025-Summer
-How to Run
+How to Play
 
-1. Open the project in Unity.
-2. Open the main scene (Assets -> 1333_RTS -> StudentWork -> Scenes -> SampleScenes).
-3. Press Play.
+Top-down grid-based strategy game
+
+Select units with click or box select
+
+Right-click to move or attack
+
+Place buildings during build phase 
+
+Health bars and team colors show unit status
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Combat System
+
+Units scan for enemies within attack range
+
+If enemy in range and attack cooldown ready → apply damage
+
+Damage = subtract attacker damage from target health
+
+If health ≤ 0 → destroy unit/building
+
+Larger-range units move closer if enemy is too far
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+How Units Decide to Move and Attack
+Scan for closest enemy in range
+
+If no enemy in range → idle
+
+If enemy found but out of range → pathfind closer
+
+Uses grid-based pathfinding to avoid obstacles and other units
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+How to Run
+Open the project in Unity
+
+Go to Assets → 1333_RTS → StudentWork → Scenes and open the main scene
+
+Press Play
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 Scene Setup
+GridManager: generates the walkable grid
 
--GridManager: generates the walkable grid.
--ArmyManager: spawns two armies based on its settings.
--UnitManager: handles all unit pathfinding and movement.
--CameraController: lets you pan/zoom/rotate the camera.
--UnitSelector: lets you click to select and command a unit.
+ArmyManager: spawns two armies based on its settings
 
+UnitManager: handles unit pathfinding and movement
+
+CameraController: lets you pan/zoom/rotate the camera
+
+UnitSelector: click to select and command a unit
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 Configuring Armies
+Select the ArmyManager GameObject in Hierarchy
 
--Select the ArmyManager GameObject in the Hierarchy
--For each army element:
--Army Name: e.g. “PlayerArmy” or “EnemyArmy”
--Spawn Center: drag in an empty Transform (where units will line up).
--Spacing: distance between units on the X-axis (default 1.5)
--Army Material: a Material to color all units of that army
--Facing: dropdown (PositiveX, NegativeX, PositiveZ, NegativeZ)
--Unit Counts: click “+” to add roles (drag in a UnitType asset and set how many to spawn)
+For each army:
 
+	Army Name (e.g. PlayerArmy or EnemyArmy)
+
+	Spawn Center: assign an empty Transform for unit line-up
+
+	Spacing: distance between units (default 1.5 on X-axis)
+
+	Army Material: color for units
+
+	Facing: choose PositiveX, NegativeX, PositiveZ, NegativeZ
+
+	Unit Counts: use + to add roles, set UnitType asset + amount
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Pixel Formation Details
+When the player presses 1, the system:
+
+Loads a preset image (e.g., PNG) that represents the formation
+
+Checks each pixel in the image
+
+Black pixels → mark positions for friendly units
+
+Red pixels → can represent enemy positions
+
+Converts the pixel coordinates to grid cell coordinates
+
+Moves friendly units to align with the black pixel positions
+
+Stores each unit’s previous position so they can return later
+
+
+When the player presses C, the system:
+
+Moves units back to their saved previous positions
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 Controls
 
--Camera
-    -WASD or arrow keys → pan
-    -Middle-mouse drag → pan
-    -Scroll wheel → zoom in/out
-    -Q/E keys → rotate around Y-axis
+Camera
 
--Unit Commands
-    -Left-click on a unit to select it (console will log which unit).
-    -Right-click on any ground surface (must have a Collider) to tell the selected unit where to go.
+	WASD / arrow keys → pan
 
--Grid Regeneration
-    -Press R to randomize the grid’s seed, rebuild walkable cells, and reset all units to their starting positions.
+	Middle-mouse drag → pan
+
+	Scroll wheel → zoom
+
+	Q/E → rotate around Y-axis
+
+Unit Commands
+
+	Left-click unit → select
+
+	Right-click on ground (with Collider) → move selected unit
+
+Grid Regeneration
+
+	Press R → randomize grid seed, rebuild walkable cells, reset units
+Gizmos
+
+	Press G → toggle gizmos on/off
+
+Pixel Formation
+
+	Press 1 → move units to match a pixel-art formation (based on a preset image)
+
+	Press C → cancel pixel formation, return units to their previous positions
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Plan to Finish
+Core systems (grid, placement, combat, pathfinding) complete
+
+Next:
+
+Improve enemy AI 
+Imporve Pixel Formation system
+
+Continue game loop work
+Audio system
+Main Manue 
+Start new game 
+

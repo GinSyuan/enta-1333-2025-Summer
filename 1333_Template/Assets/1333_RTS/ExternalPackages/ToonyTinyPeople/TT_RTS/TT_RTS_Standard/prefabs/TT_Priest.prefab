@@ -13103,6 +13103,7 @@ GameObject:
   - component: {fileID: 472812}
   - component: {fileID: 9544928}
   - component: {fileID: 5513224878385164485}
+  - component: {fileID: 8966813383418111382}
   m_Layer: 0
   m_Name: TT_Priest
   m_TagString: Untagged
@@ -13230,6 +13231,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.46, y: 2, z: 1}
   m_Center: {x: 0, y: 0.98, z: 0}
+--- !u!114 &8966813383418111382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 559bf63611b42de459420aabe2d6c84c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  detectRange: 8
+  attackRange: 3
+  attackDamage: 20
+  attackCooldown: 1
+  factionID: 0
 --- !u!1 &169308
 GameObject:
   m_ObjectHideFlags: 0
