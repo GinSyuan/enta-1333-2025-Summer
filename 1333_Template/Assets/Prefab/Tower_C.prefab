@@ -116,4 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc3c4b98119158489d0697badd9093b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 300
+  Team: 0
+  sceneSize: {x: 3, y: 3}
+  healthBarPrefab: {fileID: 5848599894935429595, guid: 6e4363133fc3d924ca3d44ee35ebb2ba, type: 3}

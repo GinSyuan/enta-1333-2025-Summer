@@ -191,8 +191,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: {fileID: 11400000, guid: bba9d610321cc8e47bfc5f9251a9425d, type: 2}
-  spawnCount: 10
-  spawnInterval: 1
+  spawnCount: 8
+  spawnInterval: 0.3
   spawnLocator: {fileID: 5869887430706288753}
   rallyPoint: {fileID: 133902939088794221}
   formationSpacing: 1.2
@@ -209,6 +209,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  Team: 0
+  sceneSize: {x: 8, y: 8}
+  healthBarPrefab: {fileID: 5848599894935429595, guid: 6e4363133fc3d924ca3d44ee35ebb2ba, type: 3}
 --- !u!1001 &7151254228304977666
 PrefabInstance:
   m_ObjectHideFlags: 0

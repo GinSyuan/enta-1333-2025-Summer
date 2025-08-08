@@ -1,3 +1,7 @@
+/// <summary>
+/// Controls camera movement, zoom, and rotation.
+/// Key Usage: Attach to main camera; responds to player input for scene navigation.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +41,9 @@ public class CameraController : MonoBehaviour
 
     private Vector3 lastMousePosition;
 
+/// <summary>
+    /// Update - Update state or handle per-frame logic
+    /// </summary>
     private void Update()
     {
         Vector3 pos = transform.position;

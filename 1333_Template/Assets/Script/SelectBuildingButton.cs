@@ -1,3 +1,7 @@
+/// <summary>
+/// UI button script to select a building type for placement.
+/// Key Usage: Attach to building selection buttons; triggers building placement logic.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +16,9 @@ public class SelectBuildingButton : MonoBehaviour
 
     private BuildingData _buildingDataForButton;
 
+/// <summary>
+    /// Setup - Perform this action
+    /// </summary>
     public void Setup(BuildingData buildingData)
     {
         _buildingDataForButton = buildingData;

@@ -1,3 +1,7 @@
+/// <summary>
+/// Enum listing terrain types for grid cells.
+/// Key Usage: Used by GridManager to determine movement cost or restrictions.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

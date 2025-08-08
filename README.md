@@ -48,10 +48,7 @@ Uses grid-based pathfinding to avoid obstacles and other units
 How to Run
 Open the project in Unity
 
-Go to Assets → 1333_RTS → StudentWork → Scenes and open the main scene
-
-Press Play
-
+Go to Assets → 1333_RTS → StudentWork → Scenes → MainMenu
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------

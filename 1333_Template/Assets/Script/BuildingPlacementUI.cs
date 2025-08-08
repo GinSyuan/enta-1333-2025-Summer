@@ -1,3 +1,7 @@
+/// <summary>
+/// Manages the UI for building placement.
+/// Key Usage: Links UI elements to placement actions.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

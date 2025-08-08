@@ -1,3 +1,7 @@
+/// <summary>
+/// Spawns armies at predefined positions.
+/// Key Usage: Configure army definitions in Inspector to set spawn points, facing, and unit counts.
+/// </summary>
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
@@ -98,6 +102,9 @@ public class ArmyManager : MonoBehaviour
     ///    - Creates a UnitEntry (unitTransform + targetTransform) and adds it to unitManager.Units.
     /// </summary>
     /// <param name="army">The ArmyDefinition that holds spawn parameters.</param>
+/// <summary>
+    /// SpawnEntireArmy - Spawn or create objects
+    /// </summary>
     private void SpawnEntireArmy(ArmyDefinition army)
     {
         // STEP 1: Determine how many units in total this army will spawn

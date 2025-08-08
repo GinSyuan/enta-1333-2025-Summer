@@ -1,3 +1,7 @@
+/// <summary>
+/// Controls arranging units into a formation based on a pixel image.
+/// Key Usage: Assign a Texture2D where each pixel color maps to unit/enemy positions; press defined keys to apply or cancel formation.
+/// </summary>
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -24,6 +28,9 @@ public class PixelFormationController : MonoBehaviour
     private bool isInFormation = false;                            // Tracks whether units are in formation
     private bool showGizmos = true;                                // Controls whether to draw gizmos for debug
 
+/// <summary>
+    /// Start - Run setup logic at the beginning
+    /// </summary>
     private void Start()
     {
         // Store each unit’s initial position
@@ -35,6 +42,9 @@ public class PixelFormationController : MonoBehaviour
         showGizmos = false;
     }
 
+/// <summary>
+    /// Update - Update state or handle per-frame logic
+    /// </summary>
     private void Update()
     {
         // Press 1 to apply formation
@@ -59,6 +69,9 @@ public class PixelFormationController : MonoBehaviour
     /// <summary>
     /// Applies the pixel-based formation to the units.
     /// </summary>
+/// <summary>
+    /// ApplyFormation - Apply changes or effects
+    /// </summary>
     private void ApplyFormation()
     {
         // Validate references
@@ -69,6 +82,8 @@ public class PixelFormationController : MonoBehaviour
         }
 
         isInFormation = true;
+
+        Unit.isCombatEnabled = false;
 
         List<Vector2Int> blackPixels = new();  // Stores grid positions for soldier pixels
         List<Vector2Int> redPixels = new();    // Stores grid positions for enemy pixels
@@ -136,8 +151,12 @@ public class PixelFormationController : MonoBehaviour
     /// <summary>
     /// Restores all units to their original positions.
     /// </summary>
+/// <summary>
+    /// RestoreOriginalPositions - Perform this action
+    /// </summary>
     private void RestoreOriginalPositions()
     {
+        
         isInFormation = false;
 
         for (int i = 0; i < unitManager.Units.Count && i < originalPositions.Count; i++)
@@ -150,10 +169,15 @@ public class PixelFormationController : MonoBehaviour
             unit.path = new List<Vector3>(unit.pathfinder.PathPositions ?? new List<Vector3>());
             unit.pathIndex = 0;
         }
+
+        Unit.isCombatEnabled = true;
     }
 
     /// <summary>
     /// Checks whether two colors are approximately close.
+    /// </summary>
+/// <summary>
+    /// ColorsClose - Perform this action
     /// </summary>
     private bool ColorsClose(Color a, Color b, float threshold = 0.2f)
     {
@@ -164,6 +188,9 @@ public class PixelFormationController : MonoBehaviour
 
     /// <summary>
     /// Moves a unit to a specified grid position.
+    /// </summary>
+/// <summary>
+    /// MoveUnitToGrid - Handle movement or repositioning
     /// </summary>
     private void MoveUnitToGrid(UnitManager.UnitEntry unit, Vector2Int gridPos)
     {
@@ -179,6 +206,9 @@ public class PixelFormationController : MonoBehaviour
     /// <summary>
     /// Validates if the grid position is within bounds.
     /// </summary>
+/// <summary>
+    /// IsGridValid - Perform this action
+    /// </summary>
     private bool IsGridValid(Vector2Int gridPos)
     {
         return gridPos.x >= 0 && gridPos.y >= 0 &&
@@ -188,6 +218,9 @@ public class PixelFormationController : MonoBehaviour
 
     /// <summary>
     /// Draws gizmos in the editor for visualizing the formation.
+    /// </summary>
+/// <summary>
+    /// OnDrawGizmos - Perform this action
     /// </summary>
     private void OnDrawGizmos()
     {

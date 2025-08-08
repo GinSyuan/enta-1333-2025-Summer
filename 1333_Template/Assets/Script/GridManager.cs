@@ -1,3 +1,7 @@
+/// <summary>
+/// Manages the logical grid for placement and pathfinding.
+/// Key Usage: Creates grid nodes; tracks occupancy; interfaces with Pathfinder.
+/// </summary>
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +34,7 @@ public class GridManager : MonoBehaviour
     private GridNode[,] gridNodes;
     public bool IsInitialized { get; private set; }
 
+
     private void Awake()
     {
 #if UNITY_EDITOR
@@ -40,6 +45,9 @@ public class GridManager : MonoBehaviour
 
     /// <summary>
     /// In Update, pressing 'G' toggles whether grid wireframe Gizmos are drawn.
+    /// </summary>
+/// <summary>
+    /// Update - Update state or handle per-frame logic
     /// </summary>
     private void Update()
     {
@@ -61,6 +69,9 @@ public class GridManager : MonoBehaviour
     /// <summary>
     /// Rebuilds the grid based on current gridSettings, terrainTypes, and seed.  
     /// After creating all nodes, notifies any Pathfinder instances to recalculate.
+    /// </summary>
+/// <summary>
+    /// InitializeGrid - Initialize settings or variables
     /// </summary>
     public void InitializeGrid()
     {
@@ -204,7 +215,6 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
 
     public bool IsCellFree(int x, int y)
     {

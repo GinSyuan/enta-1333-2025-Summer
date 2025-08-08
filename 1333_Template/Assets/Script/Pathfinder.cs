@@ -1,3 +1,7 @@
+/// <summary>
+/// Implements A* pathfinding over the grid.
+/// Key Usage: Given start and target nodes, computes shortest walkable path.
+/// </summary>
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,6 +47,9 @@ public class Pathfinder : MonoBehaviour
     /// <param name="gm">GridManager instance to query for nodes.</param>
     /// <param name="start">Transform of the unit/start point.</param>
     /// <param name="target">Transform of the target/goal point.</param>
+/// <summary>
+    /// Init - Initialize settings or variables
+    /// </summary>
     public void Init(GridManager gm, Transform start, Transform target)
     {
         gridManager = gm;
@@ -50,6 +57,9 @@ public class Pathfinder : MonoBehaviour
         targetTransform = target;
     }
 
+/// <summary>
+    /// Start - Run setup logic at the beginning
+    /// </summary>
     private void Start()
     {
 #if UNITY_EDITOR
@@ -62,6 +72,9 @@ public class Pathfinder : MonoBehaviour
     /// In Update:
     /// - Press 'R' to rerun the pathfinding algorithm from start to target.
     /// - Press 'G' to toggle whether Gizmos are drawn.
+    /// </summary>
+/// <summary>
+    /// Update - Update state or handle per-frame logic
     /// </summary>
     private void Update()
     {
@@ -82,6 +95,9 @@ public class Pathfinder : MonoBehaviour
     /// <summary>
     /// Validates references and starts A* from the grid indices under startTransform to targetTransform.
     /// </summary>
+/// <summary>
+    /// FindPath - Perform this action
+    /// </summary>
     public void FindPath()
     {
         if (gridManager == null || startTransform == null || targetTransform == null)
@@ -99,6 +115,9 @@ public class Pathfinder : MonoBehaviour
     /// </summary>
     /// <param name="start">Grid coordinates of the start node.</param>
     /// <param name="goal">Grid coordinates of the goal node.</param>
+/// <summary>
+    /// AStarPath - Perform this action
+    /// </summary>
     private void AStarPath(Vector2Int start, Vector2Int goal)
     {
         // Open set holds nodes to be evaluated; closedSet holds nodes already evaluated
@@ -206,6 +225,7 @@ public class Pathfinder : MonoBehaviour
     /// <param name="a">First grid coordinate.</param>
     /// <param name="b">Second grid coordinate.</param>
     /// <returns>Estimated cost from a to b.</returns>
+
     private int Heuristic(Vector2Int a, Vector2Int b)
     {
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
@@ -219,6 +239,7 @@ public class Pathfinder : MonoBehaviour
     /// - Green sphere at start node, Red sphere at goal node.
     /// Only draws when showGizmos is true.
     /// </summary>
+
     private void OnDrawGizmos()
     {
         if (!_globalShowGizmos)

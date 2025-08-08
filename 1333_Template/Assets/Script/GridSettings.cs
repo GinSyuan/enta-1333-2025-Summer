@@ -1,3 +1,7 @@
+/// <summary>
+/// ScriptableObject containing settings for the grid.
+/// Key Usage: Configures size, spacing, and other parameters for GridManager.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

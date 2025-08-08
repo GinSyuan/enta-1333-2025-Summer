@@ -1,3 +1,7 @@
+/// <summary>
+/// Specialized building type with unique attack or spawn logic.
+/// Key Usage: Attach to mage tower prefab to enable special behavior.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +20,9 @@ public class MageTower : MonoBehaviour
     private GridManager gridManager;
     private bool spawningStarted = false;
 
+/// <summary>
+    /// Awake - Perform this action
+    /// </summary>
     private void Awake()
     {
         unitManager = FindObjectOfType<UnitManager>();
@@ -23,6 +30,9 @@ public class MageTower : MonoBehaviour
     }
 
 
+/// <summary>
+    /// StartSpawning - Run setup logic at the beginning
+    /// </summary>
     public void StartSpawning()
     {
         if (spawningStarted) return;
@@ -30,6 +40,9 @@ public class MageTower : MonoBehaviour
         StartCoroutine(SpawnRoutine());
     }
 
+/// <summary>
+    /// SpawnRoutine - Spawn or create objects
+    /// </summary>
     private IEnumerator SpawnRoutine()
     {
         int columns = Mathf.CeilToInt(Mathf.Sqrt(spawnCount));
@@ -42,6 +55,9 @@ public class MageTower : MonoBehaviour
         }
     }
 
+/// <summary>
+    /// SpawnUnit - Spawn or create objects
+    /// </summary>
     private void SpawnUnit(int index, int columns, int rows)
     {
         var unitGO = Instantiate(unitType.unitPrefab, spawnLocator.position, spawnLocator.rotation);

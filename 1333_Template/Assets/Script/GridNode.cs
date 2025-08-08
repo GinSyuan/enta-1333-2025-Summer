@@ -1,3 +1,7 @@
+/// <summary>
+/// Represents a single cell in the grid.
+/// Key Usage: Stores position, walkability, and pathfinding data.
+/// </summary>
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

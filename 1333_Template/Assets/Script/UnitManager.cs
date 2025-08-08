@@ -1,3 +1,7 @@
+/// <summary>
+/// Manages all units in the game, both player and enemy.
+/// Key Usage: Stores unit list; issues commands; integrates with pathfinding.
+/// </summary>
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,6 +47,9 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     public List<UnitEntry> Units => units;
 
+/// <summary>
+    /// Start - Run setup logic at the beginning
+    /// </summary>
     private void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
@@ -80,6 +87,9 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+/// <summary>
+    /// Update - Update state or handle per-frame logic
+    /// </summary>
     private void Update()
     {
         // Press R to randomize grid and reset all units
@@ -125,6 +135,9 @@ public class UnitManager : MonoBehaviour
 
     /// <summary>
     /// Resets all units to their initial positions and recomputes their paths.
+    /// </summary>
+/// <summary>
+    /// ResetUnits - Reset values or state
     /// </summary>
     private void ResetUnits()
     {

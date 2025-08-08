@@ -16,24 +16,24 @@ MonoBehaviour:
   - BuildingName: wall
     BuildingIcon: {fileID: 0}
     Prefab: {fileID: 1538549784744441219, guid: 200a38acbd836af46bfa582d0b0c3ad9, type: 3}
-    Size: {x: 2, y: 4}
-    Health: 100
+    Size: {x: 2, y: 1}
+    Health: 200
     Team: 0
   - BuildingName: Gate
     BuildingIcon: {fileID: 0}
     Prefab: {fileID: 5857806330386348187, guid: b34a7956f18190e44ab45927def11184, type: 3}
     Size: {x: 3, y: 7}
-    Health: 100
+    Health: 200
     Team: 0
   - BuildingName: Fence
     BuildingIcon: {fileID: 0}
     Prefab: {fileID: 844553045610966724, guid: 500d02f73695353408c03cb42b89afb2, type: 3}
-    Size: {x: 2, y: 6}
-    Health: 100
+    Size: {x: 2, y: 1}
+    Health: 200
     Team: 0
   - BuildingName: Tower
     BuildingIcon: {fileID: 0}
     Prefab: {fileID: 4518883662638650258, guid: 1aa171d97ff949247b880ee3166e2d41, type: 3}
     Size: {x: 8, y: 8}
-    Health: 100
+    Health: 200
     Team: 0

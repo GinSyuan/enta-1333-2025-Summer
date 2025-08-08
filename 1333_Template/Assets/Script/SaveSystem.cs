@@ -1,3 +1,7 @@
+/// <summary>
+/// Handles saving and loading game data to/from disk.
+/// Key Usage: Call Save() to write PlayerData; Load() to retrieve saved state.
+/// </summary>
 ﻿using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;

@@ -1,3 +1,7 @@
+/// <summary>
+/// ScriptableObject describing a unit type.
+/// Key Usage: Stores prefab and metadata for spawning units in ArmyManager.
+/// </summary>
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

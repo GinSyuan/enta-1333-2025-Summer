@@ -127,7 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc3c4b98119158489d0697badd9093b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 100
+  Team: 0
+  sceneSize: {x: 2, y: 3}
+  healthBarPrefab: {fileID: 5848599894935429595, guid: 6e4363133fc3d924ca3d44ee35ebb2ba, type: 3}
 --- !u!4 &1538549784744667555 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 6dc5d495c37d65043b022964d98631b9, type: 3}

@@ -1,3 +1,7 @@
+/// <summary>
+/// ScriptableObject storing a list of available building types.
+/// Key Usage: Used by BuildingPlacementManager to determine available structures.
+/// </summary>
 using System.Collections;
 using System.Collections.Generic;
 using IngameDebugConsole;

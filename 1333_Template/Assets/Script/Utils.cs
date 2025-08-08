@@ -1,3 +1,7 @@
+/// <summary>
+/// Utility functions for common game calculations.
+/// Key Usage: Call static methods where needed to avoid code duplication.
+/// </summary>
 using UnityEngine;
 
 public static class Utils
